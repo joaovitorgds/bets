@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BetQuiz — Simulação Educativa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand"><span class="logo">₿</span><div><strong>BET<span>QUIZ</span></strong><small>SIMULAÇÃO EDUCATIVA</small></div></div>
+      <div class="stats">
+        <div><small>PONTOS</small><b id="score">0</b></div>
+        <div><small>SALDO FICTÍCIO</small><b id="balance">1.000</b></div>
+        <div><small>PERGUNTA</small><b id="counter">1/10</b></div>
+      </div>
+    </header>
+
+    <main>
+      <section id="home" class="screen active">
+        <div class="hero-card">
+          <div class="badge">⚠️ 100% EDUCATIVO · SEM DINHEIRO REAL</div>
+          <div class="hero-icon">🎯</div>
+          <h1>Você entende as <span>bets</span> no Brasil?</h1>
+          <p>Teste seus conhecimentos sobre apostas online, riscos, publicidade, proteção de menores e regras aplicáveis no Brasil.</p>
+          <div class="warning"><b>Como funciona?</b><br>Você usará apenas pontos fictícios. Algumas rodadas permitem colocar pontos em <em>risco educativo</em> para entender como perdas e ganhos podem acontecer.</div>
+          <div class="home-actions">
+            <button class="primary" onclick="startGame()">COMEÇAR QUIZ <span>→</span></button>
+            <button class="secondary" onclick="openModal()">COMO JOGAR?</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="game" class="screen">
+        <div class="progress-wrap"><div id="progress"></div></div>
+        <div id="riskPanel" class="risk-panel hidden">
+          <div><span>🎲 RISCO EDUCATIVO</span><small>Escolha quantos pontos fictícios colocar em risco nesta rodada.</small></div>
+          <div class="risk-options">
+            <button onclick="setRisk(25)">25</button><button onclick="setRisk(50)">50</button><button onclick="setRisk(100)">100</button>
+          </div>
+          <div class="risk-selected">Risco selecionado: <b id="riskValue">0</b> pontos</div>
+        </div>
+        <div class="quiz-card">
+          <div class="question-meta"><span id="category">CONCEITO</span><span id="timer">20s</span></div>
+          <h2 id="question"></h2>
+          <div id="answers" class="answers"></div>
+          <div id="feedback" class="feedback hidden"></div>
+        </div>
+        <button id="nextBtn" class="primary next hidden" onclick="nextQuestion()">PRÓXIMA PERGUNTA →</button>
+      </section>
+
+      <section id="result" class="screen">
+        <div class="result-card">
+          <div class="hero-icon">🏁</div>
+          <div class="badge">QUIZ CONCLUÍDO</div>
+          <h1>Resultado final</h1>
+          <div class="big-score" id="finalScore">0</div>
+          <p>pontos conquistados</p>
+          <div class="result-grid">
+            <div><span>Acertos</span><b id="correctCount">0</b></div>
+            <div><span>Erros</span><b id="wrongCount">0</b></div>
+            <div><span>Aproveitamento</span><b id="percentage">0%</b></div>
+            <div><span>Saldo fictício</span><b id="finalBalance">0</b></div>
+          </div>
+          <div id="message" class="result-message"></div>
+          <button class="primary" onclick="startGame()">JOGAR NOVAMENTE ↻</button>
+          <p class="disclaimer">Projeto escolar · Nenhum dinheiro real é utilizado.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>BETQUIZ · SIMULAÇÃO EDUCATIVA · Este jogo não oferece apostas reais nem promove casas de apostas.</footer>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-box">
+      <button class="close" onclick="closeModal()">×</button>
+      <h2>📘 Como jogar</h2>
+      <p>Responda 10 perguntas sobre bets e o contexto brasileiro.</p>
+      <ul>
+        <li>Você começa com <b>1.000 pontos fictícios</b>.</li>
+        <li>Cada resposta correta vale pontos.</li>
+        <li>Você terá <b>20 segundos</b> por pergunta.</li>
+        <li>Algumas rodadas possuem <b>risco educativo</b>, usando somente pontos fictícios.</li>
+        <li>O objetivo é aprender, não apostar.</li>
+      </ul>
+      <button class="primary" onclick="closeModal()">ENTENDI</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
