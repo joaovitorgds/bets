@@ -1,93 +1,674 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BetQuiz — Simulação Educativa</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bets Brasil - Quiz</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #46178f, #864cbf);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .tela {
+            background: white;
+            color: #222;
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #46178f;
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: #46178f;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .subtitulo {
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-iniciar {
+            background: #46178f;
+            color: white;
+            padding: 18px 50px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .btn-iniciar:hover {
+            transform: scale(1.05);
+            background: #35106e;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .contador {
+            background: #46178f;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .tempo {
+            background: #e91e63;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .pergunta {
+            background: #f4f4f4;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .pergunta h2 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .opcoes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .opcao {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 80px;
+        }
+
+        .opcao:nth-child(1) {
+            background: #e21b3c;
+        }
+
+        .opcao:nth-child(2) {
+            background: #1368ce;
+        }
+
+        .opcao:nth-child(3) {
+            background: #d89e00;
+        }
+
+        .opcao:nth-child(4) {
+            background: #26890c;
+        }
+
+        .opcao:hover {
+            transform: scale(1.03);
+            filter: brightness(1.1);
+        }
+
+        .opcao:disabled {
+            cursor: not-allowed;
+        }
+
+        .resultado {
+            display: none;
+        }
+
+        .pontuacao {
+            font-size: 60px;
+            font-weight: bold;
+            color: #46178f;
+            margin: 20px;
+        }
+
+        .mensagem {
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .explicacao {
+            background: #f1f1f1;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: left;
+            color: #333;
+        }
+
+        .proxima {
+            margin-top: 20px;
+            background: #46178f;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .proxima:hover {
+            background: #35106e;
+        }
+
+        .barra-container {
+            width: 100%;
+            height: 8px;
+            background: #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .barra {
+            height: 100%;
+            width: 100%;
+            background: #46178f;
+            transition: width 0.1s linear;
+        }
+
+        .aviso {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        @media (max-width: 650px) {
+            .tela {
+                padding: 25px 18px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .opcoes {
+                grid-template-columns: 1fr;
+            }
+
+            .topo {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div id="app">
-    <header class="topbar">
-      <div class="brand"><span class="logo">₿</span><div><strong>BET<span>QUIZ</span></strong><small>SIMULAÇÃO EDUCATIVA</small></div></div>
-      <div class="stats">
-        <div><small>PONTOS</small><b id="score">0</b></div>
-        <div><small>SALDO FICTÍCIO</small><b id="balance">1.000</b></div>
-        <div><small>PERGUNTA</small><b id="counter">1/10</b></div>
-      </div>
-    </header>
 
-    <main>
-      <section id="home" class="screen active">
-        <div class="hero-card">
-          <div class="badge">⚠️ 100% EDUCATIVO · SEM DINHEIRO REAL</div>
-          <div class="hero-icon">🎯</div>
-          <h1>Você entende as <span>bets</span> no Brasil?</h1>
-          <p>Teste seus conhecimentos sobre apostas online, riscos, publicidade, proteção de menores e regras aplicáveis no Brasil.</p>
-          <div class="warning"><b>Como funciona?</b><br>Você usará apenas pontos fictícios. Algumas rodadas permitem colocar pontos em <em>risco educativo</em> para entender como perdas e ganhos podem acontecer.</div>
-          <div class="home-actions">
-            <button class="primary" onclick="startGame()">COMEÇAR QUIZ <span>→</span></button>
-            <button class="secondary" onclick="openModal()">COMO JOGAR?</button>
-          </div>
-        </div>
-      </section>
+<div class="container">
 
-      <section id="game" class="screen">
-        <div class="progress-wrap"><div id="progress"></div></div>
-        <div id="riskPanel" class="risk-panel hidden">
-          <div><span>🎲 RISCO EDUCATIVO</span><small>Escolha quantos pontos fictícios colocar em risco nesta rodada.</small></div>
-          <div class="risk-options">
-            <button onclick="setRisk(25)">25</button><button onclick="setRisk(50)">50</button><button onclick="setRisk(100)">100</button>
-          </div>
-          <div class="risk-selected">Risco selecionado: <b id="riskValue">0</b> pontos</div>
-        </div>
-        <div class="quiz-card">
-          <div class="question-meta"><span id="category">CONCEITO</span><span id="timer">20s</span></div>
-          <h2 id="question"></h2>
-          <div id="answers" class="answers"></div>
-          <div id="feedback" class="feedback hidden"></div>
-        </div>
-        <button id="nextBtn" class="primary next hidden" onclick="nextQuestion()">PRÓXIMA PERGUNTA →</button>
-      </section>
+    <!-- TELA INICIAL -->
+    <div class="tela" id="inicio">
 
-      <section id="result" class="screen">
-        <div class="result-card">
-          <div class="hero-icon">🏁</div>
-          <div class="badge">QUIZ CONCLUÍDO</div>
-          <h1>Resultado final</h1>
-          <div class="big-score" id="finalScore">0</div>
-          <p>pontos conquistados</p>
-          <div class="result-grid">
-            <div><span>Acertos</span><b id="correctCount">0</b></div>
-            <div><span>Erros</span><b id="wrongCount">0</b></div>
-            <div><span>Aproveitamento</span><b id="percentage">0%</b></div>
-            <div><span>Saldo fictício</span><b id="finalBalance">0</b></div>
-          </div>
-          <div id="message" class="result-message"></div>
-          <button class="primary" onclick="startGame()">JOGAR NOVAMENTE ↻</button>
-          <p class="disclaimer">Projeto escolar · Nenhum dinheiro real é utilizado.</p>
-        </div>
-      </section>
-    </main>
+        <div class="logo">🎯</div>
 
-    <footer>BETQUIZ · SIMULAÇÃO EDUCATIVA · Este jogo não oferece apostas reais nem promove casas de apostas.</footer>
-  </div>
+        <h1>BETS BRASIL</h1>
 
-  <div id="modal" class="modal hidden">
-    <div class="modal-box">
-      <button class="close" onclick="closeModal()">×</button>
-      <h2>📘 Como jogar</h2>
-      <p>Responda 10 perguntas sobre bets e o contexto brasileiro.</p>
-      <ul>
-        <li>Você começa com <b>1.000 pontos fictícios</b>.</li>
-        <li>Cada resposta correta vale pontos.</li>
-        <li>Você terá <b>20 segundos</b> por pergunta.</li>
-        <li>Algumas rodadas possuem <b>risco educativo</b>, usando somente pontos fictícios.</li>
-        <li>O objetivo é aprender, não apostar.</li>
-      </ul>
-      <button class="primary" onclick="closeModal()">ENTENDI</button>
+        <p class="subtitulo">
+            Você conhece as regras das apostas esportivas no Brasil?
+            Teste seus conhecimentos!
+        </p>
+
+        <button class="btn-iniciar" onclick="iniciarJogo()">
+            🚀 COMEÇAR
+        </button>
+
+        <p class="aviso">
+            Quiz educativo sobre apostas e legislação brasileira.
+        </p>
+
     </div>
-  </div>
-  <script src="script.js"></script>
+
+
+    <!-- TELA DO QUIZ -->
+    <div class="tela" id="quiz" style="display:none;">
+
+        <div class="topo">
+
+            <div class="contador">
+                Pergunta <span id="numero">1</span>/<span id="total">10</span>
+            </div>
+
+            <div class="tempo">
+                ⏱️ <span id="tempo">15</span>s
+            </div>
+
+        </div>
+
+        <div class="barra-container">
+            <div class="barra" id="barra"></div>
+        </div>
+
+        <div class="pergunta">
+            <h2 id="textoPergunta"></h2>
+        </div>
+
+        <div class="opcoes" id="opcoes"></div>
+
+        <div id="explicacao" class="explicacao" style="display:none;"></div>
+
+        <button
+            class="proxima"
+            id="botaoProxima"
+            onclick="proximaPergunta()"
+            style="display:none;">
+            Próxima pergunta →
+        </button>
+
+    </div>
+
+
+    <!-- RESULTADO -->
+    <div class="tela resultado" id="resultado">
+
+        <div class="logo">🏆</div>
+
+        <h1>Fim do jogo!</h1>
+
+        <p>Você fez:</p>
+
+        <div class="pontuacao">
+            <span id="pontuacaoFinal">0</span>/10
+        </div>
+
+        <div class="mensagem" id="mensagemFinal"></div>
+
+        <button class="btn-iniciar" onclick="reiniciarJogo()">
+            🔄 JOGAR NOVAMENTE
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const perguntas = [
+
+    {
+        pergunta: "O que são as chamadas 'bets'?",
+        opcoes: [
+            "Aplicativos de música",
+            "Apostas, geralmente relacionadas a eventos esportivos",
+            "Programas de televisão",
+            "Jogos educativos"
+        ],
+        correta: 1,
+        explicacao: "Bets são plataformas de apostas. No Brasil, as apostas de quota fixa passaram a ter regras específicas de regulamentação."
+    },
+
+    {
+        pergunta: "Qual é o principal objetivo da regulamentação das bets?",
+        opcoes: [
+            "Incentivar crianças a apostar",
+            "Eliminar todos os esportes",
+            "Estabelecer regras e mecanismos de controle",
+            "Permitir apostas sem qualquer fiscalização"
+        ],
+        correta: 2,
+        explicacao: "A regulamentação busca estabelecer regras para o funcionamento das empresas, fiscalização e medidas de proteção aos apostadores."
+    },
+
+    {
+        pergunta: "Menores de 18 anos podem apostar legalmente?",
+        opcoes: [
+            "Sim",
+            "Somente aos finais de semana",
+            "Somente com autorização dos pais",
+            "Não"
+        ],
+        correta: 3,
+        explicacao: "A legislação brasileira proíbe a participação de menores de 18 anos em apostas de quota fixa."
+    },
+
+    {
+        pergunta: "Qual destas práticas representa um risco relacionado às apostas?",
+        opcoes: [
+            "Apostar dinheiro que você não pode perder",
+            "Estudar as regras",
+            "Conhecer os riscos",
+            "Definir limites"
+        ],
+        correta: 0,
+        explicacao: "Apostar dinheiro que é necessário para despesas pessoais pode causar problemas financeiros."
+    },
+
+    {
+        pergunta: "As bets podem ser divulgadas livremente para qualquer público?",
+        opcoes: [
+            "Sim, inclusive para crianças",
+            "Não existem regras de publicidade",
+            "Existem regras e restrições para publicidade",
+            "Somente durante a madrugada"
+        ],
+        correta: 2,
+        explicacao: "A publicidade de apostas está sujeita a regras, incluindo medidas relacionadas à proteção de menores e ao jogo responsável."
+    },
+
+    {
+        pergunta: "O que significa 'jogo responsável'?",
+        opcoes: [
+            "Apostar o máximo possível",
+            "Apostar sem estabelecer limites",
+            "Adotar comportamentos para reduzir riscos e controlar os gastos",
+            "Pedir dinheiro emprestado para apostar"
+        ],
+        correta: 2,
+        explicacao: "Jogo responsável envolve reconhecer os riscos, estabelecer limites e evitar comprometer dinheiro necessário para outras despesas."
+    },
+
+    {
+        pergunta: "Qual é uma possível consequência financeira do excesso de apostas?",
+        opcoes: [
+            "Aumento garantido da renda",
+            "Dívidas e perda de dinheiro",
+            "Salário maior",
+            "Investimento garantido"
+        ],
+        correta: 1,
+        explicacao: "Apostas não garantem lucro. O excesso pode causar perdas financeiras e endividamento."
+    },
+
+    {
+        pergunta: "Uma aposta esportiva pode garantir lucro?",
+        opcoes: [
+            "Sim, sempre",
+            "Sim, se apostar muito",
+            "Não",
+            "Somente em finais de campeonato"
+        ],
+        correta: 2,
+        explicacao: "Não existe garantia de lucro em apostas esportivas. O resultado envolve risco e pode gerar perdas."
+    },
+
+    {
+        pergunta: "Por que existem regras para empresas de apostas?",
+        opcoes: [
+            "Para permitir qualquer prática",
+            "Para estabelecer requisitos e fiscalização",
+            "Para acabar com todos os esportes",
+            "Para obrigar as pessoas a apostar"
+        ],
+        correta: 1,
+        explicacao: "As regras estabelecem requisitos para empresas que atuam no setor e mecanismos de fiscalização e proteção."
+    },
+
+    {
+        pergunta: "Qual atitude é mais segura diante das apostas?",
+        opcoes: [
+            "Apostar dinheiro destinado às contas",
+            "Apostar para tentar recuperar perdas",
+            "Ignorar os riscos",
+            "Conhecer as regras e evitar comprometer dinheiro necessário"
+        ],
+        correta: 3,
+        explicacao: "Conhecer os riscos e não comprometer dinheiro necessário para despesas são atitudes importantes para reduzir danos."
+    }
+
+];
+
+
+let perguntaAtual = 0;
+let pontos = 0;
+let tempo = 15;
+let intervalo;
+
+
+function iniciarJogo() {
+
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("quiz").style.display = "block";
+
+    document.getElementById("total").textContent = perguntas.length;
+
+    mostrarPergunta();
+}
+
+
+function mostrarPergunta() {
+
+    clearInterval(intervalo);
+
+    const pergunta = perguntas[perguntaAtual];
+
+    document.getElementById("numero").textContent =
+        perguntaAtual + 1;
+
+    document.getElementById("textoPergunta").textContent =
+        pergunta.pergunta;
+
+    const opcoes = document.getElementById("opcoes");
+
+    opcoes.innerHTML = "";
+
+    document.getElementById("explicacao").style.display = "none";
+
+    document.getElementById("botaoProxima").style.display = "none";
+
+    pergunta.opcoes.forEach((opcao, indice) => {
+
+        const botao = document.createElement("button");
+
+        botao.classList.add("opcao");
+
+        botao.textContent = opcao;
+
+        botao.onclick = () => responder(indice);
+
+        opcoes.appendChild(botao);
+
+    });
+
+    iniciarTempo();
+}
+
+
+function iniciarTempo() {
+
+    tempo = 15;
+
+    document.getElementById("tempo").textContent = tempo;
+
+    document.getElementById("barra").style.width = "100%";
+
+    intervalo = setInterval(() => {
+
+        tempo--;
+
+        document.getElementById("tempo").textContent = tempo;
+
+        document.getElementById("barra").style.width =
+            (tempo / 15 * 100) + "%";
+
+        if (tempo <= 0) {
+
+            clearInterval(intervalo);
+
+            responder(-1);
+
+        }
+
+    }, 1000);
+}
+
+
+function responder(indiceEscolhido) {
+
+    clearInterval(intervalo);
+
+    const pergunta = perguntas[perguntaAtual];
+
+    const botoes =
+        document.querySelectorAll(".opcao");
+
+    botoes.forEach(botao => {
+        botao.disabled = true;
+    });
+
+
+    if (indiceEscolhido === pergunta.correta) {
+
+        pontos++;
+
+        botoes[indiceEscolhido].style.background = "#2ecc71";
+
+    } else {
+
+        if (indiceEscolhido >= 0) {
+            botoes[indiceEscolhido].style.background = "#e74c3c";
+        }
+
+        botoes[pergunta.correta].style.background = "#2ecc71";
+
+    }
+
+
+    const explicacao =
+        document.getElementById("explicacao");
+
+    if (indiceEscolhido === -1) {
+
+        explicacao.innerHTML =
+            "⏰ <strong>Tempo esgotado!</strong><br><br>" +
+            pergunta.explicacao;
+
+    } else if (indiceEscolhido === pergunta.correta) {
+
+        explicacao.innerHTML =
+            "✅ <strong>Resposta correta!</strong><br><br>" +
+            pergunta.explicacao;
+
+    } else {
+
+        explicacao.innerHTML =
+            "❌ <strong>Resposta incorreta.</strong><br><br>" +
+            pergunta.explicacao;
+
+    }
+
+    explicacao.style.display = "block";
+
+    document.getElementById("botaoProxima").style.display =
+        "inline-block";
+}
+
+
+function proximaPergunta() {
+
+    perguntaAtual++;
+
+    if (perguntaAtual < perguntas.length) {
+
+        mostrarPergunta();
+
+    } else {
+
+        mostrarResultado();
+
+    }
+
+}
+
+
+function mostrarResultado() {
+
+    document.getElementById("quiz").style.display = "none";
+
+    document.getElementById("resultado").style.display = "block";
+
+    document.getElementById("pontuacaoFinal").textContent = pontos;
+
+
+    let mensagem;
+
+    if (pontos === 10) {
+
+        mensagem = "🔥 Excelente! Você acertou todas!";
+
+    } else if (pontos >= 7) {
+
+        mensagem = "👏 Muito bom! Você conhece bastante sobre o assunto.";
+
+    } else if (pontos >= 5) {
+
+        mensagem = "👍 Bom trabalho! Ainda dá para aprender mais.";
+
+    } else {
+
+        mensagem = "📚 Continue estudando sobre o assunto!";
+
+    }
+
+    document.getElementById("mensagemFinal").textContent =
+        mensagem;
+
+}
+
+
+function reiniciarJogo() {
+
+    perguntaAtual = 0;
+    pontos = 0;
+
+    document.getElementById("resultado").style.display = "none";
+
+    document.getElementById("quiz").style.display = "block";
+
+    mostrarPergunta();
+
+}
+
+</script>
+
 </body>
 </html>
+```
